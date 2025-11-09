@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>AI 데모 — 뭐가 궁금하세요?</title>
+  <title>AI 데모 — 오류 신고 포함</title>
   <style>
     :root{--bg:#0f1724;--card:#0b1220;--accent:#60a5fa;--muted:#94a3b8;--glass:rgba(255,255,255,0.03)}
     *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:linear-gradient(135deg,#071026 0%, #081124 60%);color:#e6eef8;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+    body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Noto Sans KR';background:linear-gradient(135deg,#071026 0%,#081124 60%);color:#e6eef8;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
     .wrap{width:100%;max-width:1100px}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:18px;box-shadow:0 8px 30px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.03)}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:12px;padding:18px;box-shadow:0 8px 30px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.03)}
     header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
     h1{font-size:1.25rem;margin:0}
     .muted{color:var(--muted);font-size:0.9rem}
     .layout{display:grid;grid-template-columns:1fr 360px;gap:14px}
-    .chat{height:520px;overflow:auto;padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));border:1px solid rgba(255,255,255,0.02)}
+    .chat{height:520px;overflow:auto;padding:12px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(255,255,255,0.00));border:1px solid rgba(255,255,255,0.02)}
     .msg{max-width:78%;padding:10px 12px;border-radius:10px;margin-bottom:10px;word-break:break-word}
     .user{background:linear-gradient(90deg,#0b1220,#071026);margin-left:auto;border:1px solid rgba(255,255,255,0.03)}
     .ai{background:linear-gradient(90deg,#0b1f33,#06202b);border:1px solid rgba(96,165,250,0.15)}
@@ -23,7 +23,7 @@
     button{padding:10px 14px;border-radius:10px;border:0;background:var(--accent);color:#02203a;cursor:pointer;font-weight:600}
     button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);font-weight:600}
     .small{font-size:0.85rem;padding:8px 10px;border-radius:8px}
-    .panel{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));border-radius:10px;padding:12px;border:1px solid rgba(255,255,255,0.02);height:520px;overflow:auto}
+    .panel{background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(255,255,255,0.00));border-radius:10px;padding:12px;border:1px solid rgba(255,255,255,0.02);height:520px;overflow:auto}
     .report-item{padding:10px;border-radius:8px;margin-bottom:8px;background:rgba(255,255,255,0.01);border:1px solid rgba(255,255,255,0.02);cursor:pointer}
     .report-item:hover{transform:translateY(-2px)}
     .meta{font-size:0.85rem;color:var(--muted)}
@@ -47,10 +47,9 @@
       <header>
         <div>
           <h1>AI 데모</h1>
-          <div class="muted">간단 시연 + 내장된 신고 센터</div>
+          <div class="muted">오프라인 AI + 오류 신고 센터</div>
         </div>
         <div class="row">
-          <div class="tag">뭐가 궁금하세요?</div>
           <button class="small ghost" id="open-report">오류 신고</button>
           <button class="small" id="open-center">신고 센터</button>
         </div>
@@ -58,22 +57,18 @@
 
       <main class="layout">
         <section>
-          <div id="chat" class="chat" aria-live="polite"></div>
-
+          <div id="chat" class="chat"></div>
           <div class="controls">
-            <input id="user-input" type="text" placeholder="뭐가 궁금하세요?" aria-label="질문 입력" />
+            <input id="user-input" type="text" placeholder="질문을 입력하세요" />
             <button id="send">전송</button>
           </div>
-
           <footer>
-            <div class="credits">오프라인 데모 — 서버 없이 동작</div>
-            <div class="muted">신고는 브라우저의 로컬 저장소에 안전하게 보관됩니다</div>
+            <div>모든 신고는 로컬 저장소에 보관됩니다.</div>
           </footer>
         </section>
-
         <aside>
-          <div class="panel" id="side-panel">
-            <h3 style="margin-top:0">최근 활동</h3>
+          <div class="panel">
+            <h3>최근 대화</h3>
             <div id="recent-list" class="muted">아직 대화가 없습니다.</div>
           </div>
         </aside>
@@ -82,55 +77,34 @@
   </div>
 
   <!-- 신고 모달 -->
-  <div id="modal" class="modal-backdrop" role="dialog" aria-modal="true">
+  <div id="modal" class="modal-backdrop">
     <div class="modal">
       <h2>오류 신고</h2>
-      <p class="muted">발생한 문제를 자세히 적어 주세요. (선택: 로그와 상태 포함)</p>
-
       <div class="field">
-        <label for="issue-type">문제 유형</label>
+        <label>문제 유형</label>
         <select id="issue-type">
-          <option>UI 오류</option>
-          <option>기능 동작 불가</option>
-          <option>성능 느림</option>
-          <option>기타</option>
+          <option>UI 오류</option><option>기능 불가</option><option>성능 느림</option><option>기타</option>
         </select>
       </div>
-
       <div class="field">
-        <label for="issue-desc">상세 설명</label>
-        <textarea id="issue-desc" placeholder="어떤 상황에서 어떤 동작을 했나요? 가능한 재현 순서를 적어 주세요."></textarea>
+        <label>상세 설명</label>
+        <textarea id="issue-desc" placeholder="어떤 문제가 있었나요?"></textarea>
       </div>
-
-      <div class="field row">
-        <label style="flex:1"><input id="include-logs" type="checkbox" /> 콘솔 로그 포함</label>
-        <label style="flex:1"><input id="include-state" type="checkbox" /> 로컬 상태 포함</label>
-      </div>
-
-      <div class="field row" style="justify-content:flex-end">
+      <div class="row" style="justify-content:flex-end">
         <button class="ghost small" id="cancel-report">취소</button>
-        <button id="send-report" class="small">신고 생성</button>
+        <button class="small" id="send-report">신고 저장</button>
       </div>
-
-      <div style="margin-top:8px;font-size:0.85rem;color:var(--muted)">신고는 이 브라우저에 저장되며 신고 센터에서 확인할 수 있습니다.</div>
     </div>
   </div>
 
-  <!-- 신고 센터 모달 -->
-  <div id="center-modal" class="modal-backdrop" role="dialog" aria-modal="true">
+  <!-- 신고 센터 -->
+  <div id="center-modal" class="modal-backdrop">
     <div class="modal">
       <h2>신고 센터</h2>
-      <p class="muted">여기에 제출한 모든 신고 목록이 표시됩니다. (로컬 저장소)</p>
-
-      <div style="display:flex;gap:8px;margin-bottom:10px">
-        <input id="filter-type" placeholder="필터: 유형 검색" style="flex:1;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04)" />
-        <button id="clear-all" class="ghost small">모두 삭제</button>
-      </div>
-
       <div id="report-list" style="max-height:420px;overflow:auto"></div>
-
       <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px">
         <button class="ghost small" id="close-center">닫기</button>
+        <button class="small" id="clear-all">모두 삭제</button>
       </div>
     </div>
   </div>
@@ -138,217 +112,80 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    // ===== 콘솔 캡처 (간단) =====
-    (function(){
-      const origLog = console.log;
-      window.__capturedLogs = [];
-      console.log = function(...args){
-        try{ window.__capturedLogs.push({ts: new Date().toISOString(), args: args.map(a=> (typeof a === 'object' ? JSON.stringify(a) : String(a)).slice(0,200))}); }catch(e){}
-        origLog.apply(console, args);
-      };
-      console.debug = console.log; console.info = console.log; console.error = console.log;
-    })();
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const $ = s => document.querySelector(s);
+    const chat = $('#chat'), input = $('#user-input'), toast = $('#toast');
+    const REPORT_KEY = 'ai_reports_v1';
 
-    // ===== 유틸 =====
-    const $ = sel => document.querySelector(sel);
-    const chatEl = $('#chat');
-    const input = $('#user-input');
-    const toast = $('#toast');
-    const REPORT_KEY = 'demo_reports_v1';
-
-    function saveReports(list){ localStorage.setItem(REPORT_KEY, JSON.stringify(list)); }
-    function loadReports(){ try{ return JSON.parse(localStorage.getItem(REPORT_KEY)||'[]'); }catch(e){ return []; } }
+    function showToast(msg){toast.textContent=msg;toast.style.display='block';setTimeout(()=>toast.style.display='none',2500);}
 
     function addMsg(text, who='ai'){
-      const div = document.createElement('div');
-      div.className = 'msg ' + (who === 'user' ? 'user' : 'ai');
-      div.textContent = text;
-      chatEl.appendChild(div);
-      chatEl.scrollTop = chatEl.scrollHeight;
-      // store in local state
-      const history = JSON.parse(localStorage.getItem('demo_chat_history')||'[]');
-      history.push({who, text, ts:new Date().toISOString()});
-      localStorage.setItem('demo_chat_history', JSON.stringify(history));
+      const div=document.createElement('div');
+      div.className='msg '+(who==='user'?'user':'ai');
+      div.textContent=text;
+      chat.appendChild(div);
+      chat.scrollTop=chat.scrollHeight;
+      const hist=JSON.parse(localStorage.getItem('chat_history')||'[]');
+      hist.push({who,text,ts:new Date().toISOString()});
+      localStorage.setItem('chat_history',JSON.stringify(hist));
       renderRecent();
     }
 
-    // 초기 메시지
     function seed(){
-      const history = JSON.parse(localStorage.getItem('demo_chat_history')||'[]');
-      if(history.length===0){
-        addMsg('안녕하세요! 무엇이 궁금하세요? 😊', 'ai');
-      } else {
-        history.forEach(m=> addMsg(m.text, m.who));
-      }
+      const hist=JSON.parse(localStorage.getItem('chat_history')||'[]');
+      if(hist.length===0) addMsg('안녕하세요! 무엇을 도와드릴까요? 😊');
+      else hist.forEach(m=>addMsg(m.text,m.who));
     }
 
-    // 간단한 AI 시뮬레이션 (서버 없음)
-    function simulateAI(userText){
-      addMsg(userText,'user');
-      // fake thinking
+    function simulateAI(q){
+      addMsg(q,'user');
       setTimeout(()=>{
-        let response = '';
-        if(/안녕|안녕하세요|ㅎㅇ/.test(userText)) response = '안녕하세요! 무엇을 도와드릴까요?';
-        else if(/오류|에러|버그/.test(userText)) response = '오류가 발생했나요? 오류 신고 버튼으로 제보해 주세요.';
-        else if(userText.trim().length<3) response = '조금 더 자세히 적어 주실래요?';
-        else response = '좋은 질문이에요! 지금은 오프라인 데모라 간단히 복창해 드려요: "' + userText + '"';
-        addMsg(response,'ai');
-        console.log('simulated-response', {q:userText, a:response});
-      }, 700 + Math.random()*600);
+        let a='좋은 질문이에요! "'+q+'"';
+        if(/오류|버그/.test(q)) a='오류가 발생했나요? "오류 신고" 버튼으로 알려주세요.';
+        addMsg(a,'ai');
+      },600);
     }
 
-    // 이벤트
-    $('#send').addEventListener('click', ()=>{
-      const v = input.value.trim();
-      if(!v) return showToast('질문을 입력해 주세요');
-      simulateAI(v);
-      input.value = '';
-      input.focus();
-    });
+    $('#send').onclick=()=>{const v=input.value.trim();if(!v)return showToast('질문을 입력하세요');simulateAI(v);input.value='';};
+    input.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();$('#send').click();}};
 
-    input.addEventListener('keydown', (e)=>{ if(e.key==='Enter') { e.preventDefault(); $('#send').click(); } });
+    $('#open-report').onclick=()=>$('#modal').style.display='flex';
+    $('#cancel-report').onclick=()=>$('#modal').style.display='none';
+    $('#send-report').onclick=()=>{
+      const type=$('#issue-type').value,desc=$('#issue-desc').value.trim();
+      if(!desc)return showToast('설명을 입력하세요');
+      const list=JSON.parse(localStorage.getItem(REPORT_KEY)||'[]');
+      list.unshift({id:Date.now(),type,desc,ts:new Date().toLocaleString()});
+      localStorage.setItem(REPORT_KEY,JSON.stringify(list));
+      $('#modal').style.display='none';$('#issue-desc').value='';
+      showToast('신고가 저장되었습니다.');
+    };
 
-    // 토스트
-    let toastTimer = null;
-    function showToast(txt, ms=2500){
-      toast.textContent = txt; toast.style.display='block';
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(()=> toast.style.display='none', ms);
-    }
+    $('#open-center').onclick=()=>{renderReports();$('#center-modal').style.display='flex';};
+    $('#close-center').onclick=()=>$('#center-modal').style.display='none';
+    $('#clear-all').onclick=()=>{if(confirm('모두 삭제하시겠어요?')){localStorage.removeItem(REPORT_KEY);renderReports();showToast('모두 삭제됨');}};
 
-    // 모달 제어
-    $('#open-report').addEventListener('click', ()=>{ $('#modal').style.display='flex'; $('#issue-desc').focus(); });
-    $('#cancel-report').addEventListener('click', ()=>{ $('#modal').style.display='none'; });
-    $('#open-center').addEventListener('click', ()=>{ renderReportList(); $('#center-modal').style.display='flex'; });
-    $('#close-center').addEventListener('click', ()=>{ $('#center-modal').style.display='none'; });
-
-    // 신고 생성 -> localStorage에 저장
-    $('#send-report').addEventListener('click', ()=>{
-      const type = $('#issue-type').value;
-      const desc = $('#issue-desc').value.trim();
-      const withLogs = $('#include-logs').checked;
-      const withState = $('#include-state').checked;
-
-      if(!desc){ showToast('상세 설명을 입력해 주세요'); return; }
-
-      const report = {
-        id: 'report-' + Date.now(),
-        ts: new Date().toISOString(),
-        userAgent: navigator.userAgent,
-        url: location.href,
-        type,
-        description: desc,
-        chatHistory: JSON.parse(localStorage.getItem('demo_chat_history')||'[]')
-      };
-
-      if(withLogs) report.consoleLogs = window.__capturedLogs || [];
-      if(withState) report.localStorage = (function(){try{return JSON.parse(JSON.stringify(localStorage));}catch(e){return String(localStorage);} })();
-
-      const list = loadReports();
-      list.unshift(report); // 최신순
-      saveReports(list);
-
-      showToast('신고가 신고 센터에 저장되었습니다.');
-      $('#modal').style.display='none';
-      $('#issue-desc').value = '';
-    });
-
-    // 신고 센터 렌더
-    function renderReportList(filterText=''){
-      const container = $('#report-list');
-      const list = loadReports();
-      container.innerHTML = '';
-      if(list.length===0){ container.innerHTML = '<div class="empty">신고가 아직 없습니다.</div>'; return; }
-
-      const filtered = list.filter(r => r.type.includes(filterText) || r.description.includes(filterText));
-      if(filtered.length===0){ container.innerHTML = '<div class="empty">필터 결과가 없습니다.</div>'; return; }
-
-      filtered.forEach(r => {
-        const el = document.createElement('div');
-        el.className = 'report-item';
-        el.innerHTML = `<strong>${r.type}</strong> <div class="meta">${new Date(r.ts).toLocaleString()} · ${r.id}</div><div class="muted" style="margin-top:6px">${(r.description||'').slice(0,120)}${(r.description && r.description.length>120? '...':'')}</div>`;
-        el.addEventListener('click', ()=> showReportDetail(r.id));
-        container.appendChild(el);
+    function renderReports(){
+      const list=JSON.parse(localStorage.getItem(REPORT_KEY)||'[]');
+      const box=$('#report-list');box.innerHTML='';
+      if(list.length===0)return box.innerHTML='<div class="empty">신고 없음</div>';
+      list.forEach(r=>{
+        const el=document.createElement('div');
+        el.className='report-item';
+        el.innerHTML=`<strong>${r.type}</strong><div class="meta">${r.ts}</div><div>${r.desc}</div>`;
+        box.appendChild(el);
       });
     }
 
-    // 상세 보기
-    function showReportDetail(id){
-      const reports = loadReports();
-      const r = reports.find(x=>x.id===id);
-      if(!r) { showToast('신고를 찾을 수 없습니다'); return; }
-
-      // 상세 내용을 모달로 표시 (재사용 모달 창)
-      const detailHtml = document.createElement('div');
-      detailHtml.innerHTML = `
-        <h3 style="margin-top:0">${r.type} · ${new Date(r.ts).toLocaleString()}</h3>
-        <div class="meta">ID: ${r.id}</div>
-        <p style="white-space:pre-wrap;margin-top:8px">${r.description}</p>
-        <div style="margin-top:8px"><strong>환경</strong><div class="meta">${r.userAgent}</div></div>
-        <div style="margin-top:8px"><strong>채팅 최근 항목</strong><pre>${(r.chatHistory||[]).slice(-6).map(h=> h.who+': '+h.text).join('
-') || '없음'}</pre></div>
-      `;
-
-      // 추가 버튼: 내보내기, 삭제, 닫기
-      const btnRow = document.createElement('div');
-      btnRow.style.display='flex'; btnRow.style.gap='8px'; btnRow.style.justifyContent='flex-end'; btnRow.style.marginTop='12px';
-
-      const exportBtn = document.createElement('button'); exportBtn.className='small'; exportBtn.textContent='내보내기';
-      const deleteBtn = document.createElement('button'); deleteBtn.className='ghost small'; deleteBtn.textContent='삭제';
-      const closeBtn = document.createElement('button'); closeBtn.className='ghost small'; closeBtn.textContent='닫기';
-
-      btnRow.appendChild(deleteBtn); btnRow.appendChild(exportBtn); btnRow.appendChild(closeBtn);
-      detailHtml.appendChild(btnRow);
-
-      // 임시 상세 모달
-      const backdrop = document.createElement('div');
-      backdrop.style.position='fixed'; backdrop.style.inset='0'; backdrop.style.background='rgba(2,6,23,0.6)'; backdrop.style.display='flex'; backdrop.style.alignItems='center'; backdrop.style.justifyContent='center';
-      const box = document.createElement('div'); box.style.background='var(--card)'; box.style.padding='18px'; box.style.borderRadius='12px'; box.style.maxWidth='820px'; box.style.width='90%'; box.style.maxHeight='80%'; box.style.overflow='auto';
-      box.appendChild(detailHtml);
-      backdrop.appendChild(box);
-      document.body.appendChild(backdrop);
-
-      closeBtn.addEventListener('click', ()=> { backdrop.remove(); });
-      deleteBtn.addEventListener('click', ()=>{
-        if(!confirm('정말 이 신고를 삭제하시겠어요?')) return;
-        const remaining = loadReports().filter(x=>x.id!==id);
-        saveReports(remaining);
-        showToast('신고가 삭제되었습니다.');
-        backdrop.remove();
-        renderReportList($('#filter-type').value.trim());
-      });
-
-      exportBtn.addEventListener('click', ()=>{
-        const blob = new Blob([JSON.stringify(r, null, 2)], {type:'application/json'});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href = url; a.download = r.id + '.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-        showToast('신고를 JSON으로 다운로드했습니다.');
-      });
-    }
-
-    // 필터
-    $('#filter-type').addEventListener('input', (e)=>{ renderReportList(e.target.value.trim()); });
-
-    // 모두 삭제
-    $('#clear-all').addEventListener('click', ()=>{
-      if(!confirm('신고 목록을 모두 삭제하시겠어요?')) return;
-      saveReports([]);
-      renderReportList();
-      showToast('모두 삭제되었습니다.');
-    });
-
-    // 사이드 최근 활동 렌더
     function renderRecent(){
-      const el = $('#recent-list');
-      const h = JSON.parse(localStorage.getItem('demo_chat_history')||'[]');
-      if(!h || h.length===0){ el.textContent = '아직 대화가 없습니다.'; return; }
-      const last = h.slice(-6).reverse();
-      el.innerHTML = last.map(x=> `<div style="margin-bottom:8px"><strong>${x.who==='user'?'You':'AI'}</strong> <div class="meta">${new Date(x.ts).toLocaleTimeString()}</div><div class="muted">${x.text.slice(0,80)}</div></div>`).join('');
+      const list=JSON.parse(localStorage.getItem('chat_history')||'[]');
+      const r=$('#recent-list');
+      if(list.length===0)return r.textContent='아직 대화가 없습니다.';
+      r.innerHTML=list.slice(-5).reverse().map(x=>`<div><strong>${x.who}</strong> <div class="meta">${x.text}</div></div>`).join('');
     }
 
-    // 초기화
-    seed(); renderRecent();
-    console.log('demo-ready');
+    seed();renderRecent();
+  });
   </script>
 </body>
 </html>
